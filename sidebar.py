@@ -64,11 +64,20 @@ class Sidebar(QWidget):
             bottom = top + int(boundingRect.height())
             block_number += 1
 
-    def width_(self):
+    def update_area(self, rect, dy):
+        if dy:
+            self.scroll(0, dy)
+        else:
+            self.update(0, rect.y(), self.width(), rect.height())
+        if rect.contains(self._edistor.viewport().rect()):
+            self.update_area_width(0)
+
         digits = len(str(max(1, self._edistor.blockCount())))
         ancho = Sidebar.LEFT_MARGIN + self._edistor.fontMetrics().width('0') * \
                 digits + Sidebar.RIGHT_MARGIN
         if self.width() != ancho:
             self.setFixedWidth(ancho)
             self._edistor.setViewportMargins(ancho, 0, 0, 0)
-        return ancho
+
+    def update_area_width(self, new_block_count):
+        self._edistor.setViewportMargins(self.width(), 0, 0, 0)

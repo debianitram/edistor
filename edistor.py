@@ -45,9 +45,9 @@ class Edistor(QPlainTextEdit):
         self._alpha_current_line = self._color_current_line.setAlpha(50)
         # Connection
         self.connect(self, SIGNAL("blockCountChanged(int)"),
-                    self._update_sidebar_area_width)
+                    self.sidebar.update_area_width)
         self.connect(self, SIGNAL("updateRequest(const QRect&, int)"),
-                    self._update_sidebar_areas)
+                    self.sidebar.update_area)
         self.connect(self, SIGNAL("cursorPositionChanged()"),
                     self._highlight_current_line)
 
@@ -85,18 +85,6 @@ class Edistor(QPlainTextEdit):
         selection.cursor.clearSelection()
         self.extra_selections.append(selection)
         self.setExtraSelections(self.extra_selections)
-
-    def _update_sidebar_area_width(self, new_block_count):
-        self.setViewportMargins(self.sidebar.width(), 0, 0, 0)
-
-    def _update_sidebar_areas(self, rect, dy):
-        if dy:
-            self.sidebar.scroll(0, dy)
-        else:
-            self.sidebar.update(0, rect.y(), self.sidebar.width_(),
-                                rect.height())
-        if rect.contains(self.viewport().rect()):
-            self._update_sidebar_area_width(0)
 
     def resizeEvent(self, e):
         QPlainTextEdit.resizeEvent(self, e)
