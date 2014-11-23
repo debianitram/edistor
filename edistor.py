@@ -37,7 +37,7 @@ class Edistor(QPlainTextEdit):
         self.position_margin = QFontMetricsF(
             self.document().defaultFont()).width("#") * 80
         # Margin line
-        self._margin = None
+        self._margin = False
         # Sidebar
         self.sidebar = Sidebar(self)
         # Highlight current line
@@ -53,31 +53,17 @@ class Edistor(QPlainTextEdit):
                     self._highlight_current_line)
 
     def margin(self, show=False):
-        """ Margin line default desactivate """
-
-        self._margin = show
-        self._margin_color = QColor('blue')
-        self._margin_alpha = 60
-
-    def margin_color(self, color):
-        """ Set the color of margin line """
-
-        self._margin_color = QColor(color)
-
-    def margin_alpha(self, alpha):
-        """ Set the alpha of margin line """
-
-        self._margin_alpha = alpha
+        """ Set the margin line """
+        if show:
+            self._margin = Margin()
 
     def paintEvent(self, e):
         QPlainTextEdit.paintEvent(self, e)
         if self._margin:
             qp = QPainter()
             qp.begin(self.viewport())
-            qp.setPen(self._margin_color)
+            qp.setPen(self._margin.color)
             offset = self.contentOffset()
-            background = self._margin_color
-            background.setAlpha(self._margin_alpha)
             qp.drawLine(self.position_margin + offset.x(), 0,
                         self.position_margin + offset.x(),
                         self.viewport().height())
@@ -116,3 +102,14 @@ class Edistor(QPlainTextEdit):
         cr = self.contentsRect()
         self.sidebar.setGeometry(QRect(cr.left(), cr.top(),
                                 self.sidebar.width(), cr.height()))
+
+
+class Margin:
+
+    def __init__(self):
+        self.color = QColor('gray')
+        self.alpha = self.color.setAlpha(60)
+
+    def setColor(self, color, alpha):
+        self.color = QColor(color)
+        self.alpha = self.color.setAlpha(alpha)
