@@ -24,6 +24,7 @@ class Sidebar(QWidget):
     def __init__(self, edistor):
         QWidget.__init__(self, edistor)
         self._edistor = edistor
+        self._bold = False
 
     def paintEvent(self, e):
         qp = QPainter(self)
@@ -32,21 +33,36 @@ class Sidebar(QWidget):
 
         block = self._edistor.firstVisibleBlock()
         block_number = block.blockNumber()
+        text_cursor_position = self._edistor.textCursor().position()
+        actual_block = self._edistor.document().findBlock(text_cursor_position)
         top = int(self._edistor.blockBoundingGeometry(block).translated(
                   self._edistor.contentOffset()).top())
         bottom = top + int(self._edistor.blockBoundingRect(block).height())
 
         while block.isValid() and top <= e.rect().bottom():
+            # Set bold current line
+            if block == actual_block:
+                self._bold = True
+                font = qp.font()
+                font.setBold(True)
+                qp.setFont(font)
+
             if block.isVisible() and bottom >= e.rect().top():
                 number = str(block_number + 1)
                 qp.drawText(0, top, self.width(),
                             self._edistor.fontMetrics().height(),
                             Qt.AlignRight, number)
-            block = block.next()
             boundingRect = self._edistor.blockBoundingRect(block)
             top = bottom
             bottom = top + int(boundingRect.height())
             block_number += 1
+
+            if self._bold:
+                font = qp.font()
+                font.setBold(False)
+                qp.setFont(font)
+
+            block = block.next()
 
     def width(self):
         digits = len(str(max(1, self._edistor.blockCount())))

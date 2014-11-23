@@ -105,11 +105,15 @@ class Edistor(QPlainTextEdit):
 
 
 class Margin:
+    """ Margin line class """
 
     def __init__(self):
+        # Default values
         self.color = QColor('gray')
         self.alpha = self.color.setAlpha(60)
 
     def setColor(self, color, alpha):
+        """ Set color and alpha """
+
         self.color = QColor(color)
         self.alpha = self.color.setAlpha(alpha)
