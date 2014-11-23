@@ -1,4 +1,4 @@
-edistor
+Edistor
 =======
 
-Editor for EDIS
+Edistor is a editor implementation of QPlainTextEdit for EDIS.
