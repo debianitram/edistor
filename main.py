@@ -14,7 +14,8 @@ if __name__ == "__main__":
     app = QApplication([])
     editor = edistor.Edistor()
     editor.setWindowTitle(editor.tr("Edistor"))
-    editor.setMinimumSize(900, 500)
+    editor.highlightCurrentLine('red', 30)
+    editor.setMinimumSize(700, 500)
     editor.show()
 
     sys.exit(app.exec_())

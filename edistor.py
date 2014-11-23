@@ -43,14 +43,15 @@ class Edistor(QPlainTextEdit):
         # Highlight current line
         self._color_current_line = QColor('lightblue')
         self._alpha_current_line = self._color_current_line.setAlpha(50)
-        self._highlight_current_line()
         # Connection
         self.connect(self, SIGNAL("blockCountChanged(int)"),
                     self._update_sidebar_area_width)
-        self.connect(self, SIGNAL("updateRequest(QRect, int)"),
+        self.connect(self, SIGNAL("updateRequest(const QRect&, int)"),
                     self._update_sidebar_areas)
         self.connect(self, SIGNAL("cursorPositionChanged()"),
                     self._highlight_current_line)
+
+        self._highlight_current_line()
 
     def margin(self, show=False):
         """ Set the margin line """
@@ -92,7 +93,7 @@ class Edistor(QPlainTextEdit):
         if dy:
             self.sidebar.scroll(0, dy)
         else:
-            self.sidebar.update(0, rect.y(), self.sidebar.width(),
+            self.sidebar.update(0, rect.y(), self.sidebar.width_(),
                                 rect.height())
         if rect.contains(self.viewport().rect()):
             self._update_sidebar_area_width(0)

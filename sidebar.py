@@ -52,10 +52,6 @@ class Sidebar(QWidget):
                 qp.drawText(0, top, self.width(),
                             self._edistor.fontMetrics().height(),
                             Qt.AlignRight, number)
-            boundingRect = self._edistor.blockBoundingRect(block)
-            top = bottom
-            bottom = top + int(boundingRect.height())
-            block_number += 1
 
             if self._bold:
                 font = qp.font()
@@ -63,8 +59,16 @@ class Sidebar(QWidget):
                 qp.setFont(font)
 
             block = block.next()
+            boundingRect = self._edistor.blockBoundingRect(block)
+            top = bottom
+            bottom = top + int(boundingRect.height())
+            block_number += 1
 
-    def width(self):
+    def width_(self):
         digits = len(str(max(1, self._edistor.blockCount())))
-        return Sidebar.LEFT_MARGIN + self._edistor.fontMetrics().width('9') * \
+        ancho = Sidebar.LEFT_MARGIN + self._edistor.fontMetrics().width('0') * \
                 digits + Sidebar.RIGHT_MARGIN
+        if self.width() != ancho:
+            self.setFixedWidth(ancho)
+            self._edistor.setViewportMargins(ancho, 0, 0, 0)
+        return ancho
