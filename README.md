@@ -1,4 +1,4 @@
 Edistor
 =======
 
-Edistor is a editor implementation of QPlainTextEdit for EDIS.
+Editor component for PyQt/PySide
